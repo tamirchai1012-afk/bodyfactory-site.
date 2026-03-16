@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>שאלון בריאות | Body Factory Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@400;700;900&family=Assistant:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>emailjs.init('ujtZb7npYjqkId6Ef');</script>
+<style>
+:root {
+  --black: #080808;
+  --charcoal: #111;
+  --card: #161616;
+  --gold: #c9a84c;
+  --gold-light: #e8c96a;
+  --gold-dim: rgba(201,168,76,0.15);
+  --white: #f5f5f0;
+  --gray: #777;
+  --border: #222;
+  --success: #2ecc71;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body {
+  background:var(--black);
+  color:var(--white);
+  font-family:'Assistant', sans-serif;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+}
+
+/* HEADER */
+header {
+  padding:24px 48px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:rgba(8,8,8,0.95);
+  position:sticky; top:0; z-index:100;
+}
+.logo-text {
+  font-family:'Frank Ruhl Libre', serif;
+  font-size:1.3rem;
+  font-weight:700;
+  letter-spacing:1px;
+}
+.logo-text span { color:var(--gold); }
+
+/* PROGRESS */
+.progress-wrap {
+  flex:1;
+  max-width:400px;
+  margin:0 48px;
+}
+.progress-label {
+  display:flex;
+  justify-content:space-between;
+  font-size:0.75rem;
+  color:var(--gray);
+  margin-bottom:8px;
+  letter-spacing:1px;
+}
+.progress-bar {
+  height:3px;
+  background:var(--border);
+  border-radius:2px;
+  overflow:hidden;
+}
+.progress-fill {
+  height:100%;
+  background:var(--gold);
+  transition:width 0.5s ease;
+  border-radius:2px;
+}
+
+/* STEPS NAV */
+.steps-nav {
+  display:flex;
+  gap:8px;
+}
+.step-dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background:var(--border);
+  transition:all 0.3s;
+}
+.step-dot.active { background:var(--gold); transform:scale(1.3); }
+.step-dot.done { background:var(--gold); opacity:0.5; }
+
+/* MAIN */
+main {
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:48px 24px;
+}
+
+.form-container {
+  width:100%;
+  max-width:680px;
+}
+
+/* STEP */
+.step-panel {
+  display:none;
+  animation:slideIn 0.4s ease;
+}
+.step-panel.active { display:block; }
+
+@keyframes slideIn {
+  from { opacity:0; transform:translateX(20px); }
+  to { opacity:1; transform:translateX(0); }
+}
+@keyframes slideOut {
+  from { opacity:1; transform:translateX(0); }
+  to { opacity:0; transform:translateX(-20px); }
+}
+
+.step-header {
+  margin-bottom:40px;
+}
+.step-num {
+  font-size:0.7rem;
+  letter-spacing:4px;
+  color:var(--gold);
+  text-transform:uppercase;
+  display:block;
+  margin-bottom:12px;
+}
+.step-title {
+  font-family:'Frank Ruhl Libre', serif;
+  font-size:clamp(2rem,5vw,3.2rem);
+  font-weight:900;
+  line-height:1.1;
+  margin-bottom:10px;
+}
+.step-title span { color:var(--gold); }
+.step-desc {
+  color:var(--gray);
+  font-size:0.9rem;
+  font-weight:300;
+  line-height:1.7;
+}
+
+/* FORM FIELDS */
+.fields-grid {
+  display:grid;
+  gap:20px;
+}
+.fields-grid.two-col {
+  grid-template-columns:1fr 1fr;
+}
+.field-group { display:flex; flex-direction:column; gap:8px; }
+.field-group.full { grid-column:1/-1; }
+
+label {
+  font-size:0.72rem;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--gray);
+  font-weight:600;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="tel"],
+input[type="email"],
+select,
+textarea {
+  background:#0d0d0d;
+  border:1px solid var(--border);
+  color:var(--white);
+  padding:14px 16px;
+  font-family:'Assistant', sans-serif;
+  font-size:0.95rem;
+  transition:border-color 0.3s, background 0.3s;
+  outline:none;
+  width:100%;
+  -webkit-appearance:none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color:var(--gold);
+  background:#111;
+}
+select option { background:#111; }
+textarea { resize:vertical; min-height:90px; }
+
+/* RADIO / CHECKBOX GROUPS */
+.radio-group, .check-group {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.radio-option, .check-option {
+  position:relative;
+}
+.radio-option input, .check-option input {
+  position:absolute; opacity:0; width:0; height:0;
+}
+.radio-option label, .check-option label {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:10px 18px;
+  background:var(--card);
+  border:1px solid var(--border);
+  cursor:pointer;
+  font-size:0.85rem;
+  letter-spacing:0.5px;
+  text-transform:none;
+  color:#bbb;
+  transition:all 0.25s;
+  font-weight:400;
+}
+.radio-option input:checked + label,
+.check-option input:checked + label {
+  border-color:var(--gold);
+  color:var(--gold);
+  background:rgba(201,168,76,0.08);
+}
+.radio-option label:hover, .check-option label:hover {
+  border-color:rgba(201,168,76,0.4);
+  color:var(--white);
+}
+
+/* SCALE SLIDER */
+.scale-wrap { display:flex; flex-direction:column; gap:10px; }
+.scale-row { display:flex; align-items:center; gap:16px; }
+.scale-labels { display:flex; justify-content:space-between; font-size:0.75rem; color:var(--gray); }
+input[type="range"] {
+  -webkit-appearance:none;
+  appearance:none;
+  flex:1;
+  height:4px;
+  background:var(--border);
+  border:none;
+  padding:0;
+  cursor:pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:20px; height:20px;
+  border-radius:50%;
+  background:var(--gold);
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform:scale(1.2); }
+.scale-value {
+  font-family:'Frank Ruhl Libre', serif;
+  font-size:1.6rem;
+  font-weight:900;
+  color:var(--gold);
+  min-width:32px;
+  text-align:center;
+}
+
+/* NAVIGATION BUTTONS */
+.nav-btns {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:40px;
+  gap:16px;
+}
+.btn-back {
+  background:transparent;
+  color:var(--gray);
+  border:1px solid var(--border);
+  padding:14px 28px;
+  font-family:'Assistant', sans-serif;
+  font-size:0.9rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  letter-spacing:1px;
+}
+.btn-back:hover { color:var(--white); border-color:var(--gray); }
+.btn-next {
+  background:var(--gold);
+  color:var(--black);
+  border:none;
+  padding:14px 40px;
+  font-family:'Assistant', sans-serif;
+  font-weight:700;
+  font-size:0.95rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  letter-spacing:1px;
+  margin-right:auto;
+}
+.btn-next:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 8px 24px rgba(201,168,76,0.3); }
+.btn-generate {
+  background:var(--gold);
+  color:var(--black);
+  border:none;
+  padding:16px 44px;
+  font-family:'Assistant', sans-serif;
+  font-weight:800;
+  font-size:1rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  letter-spacing:1px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-right:auto;
+}
+.btn-generate:hover { background:var(--gold-light); transform:translateY(-2px); box-shadow:0 8px 32px rgba(201,168,76,0.35); }
+.btn-generate svg { flex-shrink:0; }
+
+/* SUCCESS SCREEN */
+.success-screen {
+  display:none;
+  text-align:center;
+  padding:60px 24px;
+  animation:slideIn 0.5s ease;
+}
+.success-icon {
+  width:80px; height:80px;
+  background:rgba(201,168,76,0.1);
+  border:2px solid var(--gold);
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 auto 28px;
+  font-size:2rem;
+}
+.success-screen h2 {
+  font-family:'Frank Ruhl Libre', serif;
+  font-size:2.5rem;
+  font-weight:900;
+  margin-bottom:16px;
+}
+.success-screen h2 span { color:var(--gold); }
+.success-screen p { color:var(--gray); font-size:1rem; line-height:1.7; margin-bottom:36px; max-width:400px; margin-left:auto; margin-right:auto; }
+.download-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:var(--gold);
+  color:var(--black);
+  border:none;
+  padding:16px 40px;
+  font-family:'Assistant', sans-serif;
+  font-weight:800;
+  font-size:1rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  text-decoration:none;
+  margin:0 8px 12px;
+}
+.download-btn:hover { background:var(--gold-light); transform:translateY(-2px); }
+.wa-send-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background:#25D366;
+  color:#fff;
+  border:none;
+  padding:16px 40px;
+  font-family:'Assistant', sans-serif;
+  font-weight:800;
+  font-size:1rem;
+  cursor:pointer;
+  transition:all 0.3s;
+  text-decoration:none;
+  margin:0 8px 12px;
+}
+.wa-send-btn:hover { background:#1ebe5d; transform:translateY(-2px); }
+
+/* DIVIDER */
+.section-divider {
+  height:1px;
+  background:var(--border);
+  margin:28px 0;
+}
+
+/* FOOTER */
+footer {
+  text-align:center;
+  padding:20px;
+  border-top:1px solid var(--border);
+  color:var(--gray);
+  font-size:0.75rem;
+  letter-spacing:1px;
+}
+
+@media(max-width:600px) {
+  header { padding:16px 20px; }
+  .progress-wrap { display:none; }
+  main { padding:32px 16px; }
+  .fields-grid.two-col { grid-template-columns:1fr; }
+  .nav-btns { flex-wrap:wrap; }
+  .btn-next, .btn-generate { width:100%; justify-content:center; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo-text">BODY <span>FACTORY</span> HOME</div>
+  <div class="progress-wrap">
+    <div class="progress-label">
+      <span id="progressText">שלב 1 מתוך 4</span>
+      <span id="progressPct">25%</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:25%"></div></div>
+  </div>
+  <div class="steps-nav">
+    <div class="step-dot active" id="dot-0"></div>
+    <div class="step-dot" id="dot-1"></div>
+    <div class="step-dot" id="dot-2"></div>
+    <div class="step-dot" id="dot-3"></div>
+  </div>
+</header>
+
+<main>
+<div class="form-container">
+
+  <!-- STEP 1: פרטים אישיים -->
+  <div class="step-panel active" id="step-0">
+    <div class="step-header">
+      <span class="step-num">שלב 01 / 04</span>
+      <div class="step-title">פרטים <span>אישיים</span><br>ויעדים</div>
+      <p class="step-desc">נתחיל בהכרות בסיסית — מי אתה ולאן אתה רוצה להגיע.</p>
+    </div>
+    <div class="fields-grid two-col">
+      <div class="field-group">
+        <label>שם פרטי *</label>
+        <input type="text" id="q_firstname" placeholder="ישראל" autocomplete="given-name">
+      </div>
+      <div class="field-group">
+        <label>שם משפחה *</label>
+        <input type="text" id="q_lastname" placeholder="ישראלי" autocomplete="family-name">
+      </div>
+      <div class="field-group">
+        <label>גיל</label>
+        <input type="number" id="q_age" placeholder="30" min="10" max="99">
+      </div>
+      <div class="field-group">
+        <label>מין</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_gender" id="g_m" value="זכר"><label for="g_m">זכר</label></div>
+          <div class="radio-option"><input type="radio" name="q_gender" id="g_f" value="נקבה"><label for="g_f">נקבה</label></div>
+          <div class="radio-option"><input type="radio" name="q_gender" id="g_o" value="אחר"><label for="g_o">אחר</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>גובה (ס"מ)</label>
+        <input type="number" id="q_height" placeholder="175" min="100" max="230">
+      </div>
+      <div class="field-group">
+        <label>משקל נוכחי (ק"ג)</label>
+        <input type="number" id="q_weight" placeholder="80" min="30" max="250">
+      </div>
+      <div class="field-group">
+        <label>משקל יעד (ק"ג)</label>
+        <input type="number" id="q_target_weight" placeholder="72" min="30" max="250">
+      </div>
+      <div class="field-group">
+        <label>טלפון</label>
+        <input type="tel" id="q_phone" placeholder="050-0000000" autocomplete="tel">
+      </div>
+      <div class="field-group full">
+        <label>מה המטרה העיקרית שלך ל-90 הימים הקרובים? *</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl1" value="ירידה במשקל"><label for="gl1">ירידה במשקל</label></div>
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl2" value="בניית שריר"><label for="gl2">בניית שריר</label></div>
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl3" value="כושר כללי"><label for="gl3">כושר כללי</label></div>
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl4" value="שיקום וחיזוק"><label for="gl4">שיקום וחיזוק</label></div>
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl5" value="עיצוב גוף"><label for="gl5">עיצוב גוף</label></div>
+          <div class="radio-option"><input type="radio" name="q_goal" id="gl6" value="אחר"><label for="gl6">אחר</label></div>
+        </div>
+      </div>
+      <div class="field-group full">
+        <label>תאר את המטרה שלך במילים שלך</label>
+        <textarea id="q_goal_text" placeholder="לדוגמה: אני רוצה להרגיש אנרגטי יותר, לרדת שמלה אחת, ולהצליח לשחק עם הילדים בלי להתעייף..."></textarea>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-next" onclick="nextStep(0)">המשך ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 2: היסטוריה רפואית -->
+  <div class="step-panel" id="step-1">
+    <div class="step-header">
+      <span class="step-num">שלב 02 / 04</span>
+      <div class="step-title">היסטוריה <span>רפואית</span><br>ופציעות</div>
+      <p class="step-desc">המידע הזה עוזר לנו לבנות תכנית בטוחה ומותאמת בדיוק עבורך.</p>
+    </div>
+    <div class="fields-grid">
+      <div class="field-group">
+        <label>האם יש לך מצב רפואי שעלינו לדעת עליו?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_medical" id="med_no" value="לא"><label for="med_no">לא</label></div>
+          <div class="radio-option"><input type="radio" name="q_medical" id="med_yes" value="כן"><label for="med_yes">כן</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>אם כן, פרט</label>
+        <textarea id="q_medical_detail" placeholder="לב, לחץ דם, סוכרת, בעיות נשימה..."></textarea>
+      </div>
+      <div class="section-divider"></div>
+      <div class="field-group">
+        <label>האם סבלת מפציעות ספורטיביות או ניתוחים?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_injury" id="inj_no" value="לא"><label for="inj_no">לא</label></div>
+          <div class="radio-option"><input type="radio" name="q_injury" id="inj_yes" value="כן"><label for="inj_yes">כן</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>אם כן, פרט אזור ומתי</label>
+        <textarea id="q_injury_detail" placeholder="לדוגמה: פציעת ברך שמאל לפני שנתיים, ניתוח גב ב-2020..."></textarea>
+      </div>
+      <div class="section-divider"></div>
+      <div class="field-group">
+        <label>אילו אזורים בגוף כואבים או מוגבלים כיום?</label>
+        <div class="check-group">
+          <div class="check-option"><input type="checkbox" id="pain_back" value="גב תחתון"><label for="pain_back">גב תחתון</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_neck" value="צוואר/גב עליון"><label for="pain_neck">צוואר / גב עליון</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_knee" value="ברכיים"><label for="pain_knee">ברכיים</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_shoulder" value="כתפיים"><label for="pain_shoulder">כתפיים</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_hip" value="ירכיים/מפשעה"><label for="pain_hip">ירכיים</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_ankle" value="קרסוליים"><label for="pain_ankle">קרסוליים</label></div>
+          <div class="check-option"><input type="checkbox" id="pain_none" value="אין כאבים"><label for="pain_none">אין כאבים</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>האם אתה נוטל תרופות קבועות?</label>
+        <textarea id="q_meds" placeholder="שם התרופה ומינון (אם רלוונטי לאימון)..."></textarea>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="prevStep(1)">← חזרה</button>
+      <button class="btn-next" onclick="nextStep(1)">המשך ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: הרגלי תזונה ושינה -->
+  <div class="step-panel" id="step-2">
+    <div class="step-header">
+      <span class="step-num">שלב 03 / 04</span>
+      <div class="step-title">תזונה <span>ושינה</span></div>
+      <p class="step-desc">הרגלי היום-יום שלך משפיעים ישירות על התוצאות — בוא נבין מה קורה.</p>
+    </div>
+    <div class="fields-grid">
+      <div class="field-group">
+        <label>כמה ארוחות ביום בממוצע?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_meals" id="m1" value="1-2"><label for="m1">1-2</label></div>
+          <div class="radio-option"><input type="radio" name="q_meals" id="m2" value="3"><label for="m2">3</label></div>
+          <div class="radio-option"><input type="radio" name="q_meals" id="m3" value="4-5"><label for="m3">4-5</label></div>
+          <div class="radio-option"><input type="radio" name="q_meals" id="m4" value="6+"><label for="m4">6+</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>איך תתאר את התזונה שלך כיום?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt1" value="ללא מגבלות"><label for="dt1">ללא מגבלות</label></div>
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt2" value="צמחוני"><label for="dt2">צמחוני</label></div>
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt3" value="טבעוני"><label for="dt3">טבעוני</label></div>
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt4" value="ללא גלוטן"><label for="dt4">ללא גלוטן</label></div>
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt5" value="כשר"><label for="dt5">כשר</label></div>
+          <div class="radio-option"><input type="radio" name="q_diet_type" id="dt6" value="אחר"><label for="dt6">אחר</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>האם יש מזונות שאינך אוכל / אלרגיות?</label>
+        <textarea id="q_allergies" placeholder="לדוגמה: לא אוכל דגים, אלרגי לבוטנים..."></textarea>
+      </div>
+      <div class="section-divider"></div>
+      <div class="field-group">
+        <label>כמה שעות שינה בלילה בממוצע?</label>
+        <div class="scale-wrap">
+          <div class="scale-row">
+            <input type="range" id="q_sleep" min="3" max="10" value="7" oninput="document.getElementById('sleep_val').textContent=this.value">
+            <div class="scale-value" id="sleep_val">7</div>
+          </div>
+          <div class="scale-labels"><span>3 שעות</span><span>10 שעות</span></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>רמת לחץ / סטרס בחיים כיום</label>
+        <div class="scale-wrap">
+          <div class="scale-row">
+            <input type="range" id="q_stress" min="1" max="10" value="5" oninput="document.getElementById('stress_val').textContent=this.value">
+            <div class="scale-value" id="stress_val">5</div>
+          </div>
+          <div class="scale-labels"><span>נמוך מאוד</span><span>גבוה מאוד</span></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>כמה מים שותה ביום (ליטר)?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_water" id="w1" value="פחות מ-1 ליטר"><label for="w1">פחות מ-1L</label></div>
+          <div class="radio-option"><input type="radio" name="q_water" id="w2" value="1-2 ליטר"><label for="w2">1–2L</label></div>
+          <div class="radio-option"><input type="radio" name="q_water" id="w3" value="2-3 ליטר"><label for="w3">2–3L</label></div>
+          <div class="radio-option"><input type="radio" name="q_water" id="w4" value="3+ ליטר"><label for="w4">3L+</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="prevStep(2)">← חזרה</button>
+      <button class="btn-next" onclick="nextStep(2)">המשך ←</button>
+    </div>
+  </div>
+
+  <!-- STEP 4: ניסיון ספורטיבי -->
+  <div class="step-panel" id="step-3">
+    <div class="step-header">
+      <span class="step-num">שלב 04 / 04</span>
+      <div class="step-title">ניסיון <span>ספורטיבי</span><br>ואורח חיים</div>
+      <p class="step-desc">השלב האחרון — נבין מהיכן אתה מגיע כדי לבנות תכנית שמתחילה בדיוק במקום הנכון.</p>
+    </div>
+    <div class="fields-grid">
+      <div class="field-group">
+        <label>האם התאמנת בעבר בצורה קבועה?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_exp" id="ex1" value="מעולם לא התאמנתי"><label for="ex1">מעולם לא</label></div>
+          <div class="radio-option"><input type="radio" name="q_exp" id="ex2" value="התאמנתי בעבר, לא כיום"><label for="ex2">בעבר, לא כיום</label></div>
+          <div class="radio-option"><input type="radio" name="q_exp" id="ex3" value="מתאמן לסירוגין"><label for="ex3">לסירוגין</label></div>
+          <div class="radio-option"><input type="radio" name="q_exp" id="ex4" value="מתאמן באופן קבוע"><label for="ex4">קבוע</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>אילו סוגי אימונים עשית בעבר?</label>
+        <div class="check-group">
+          <div class="check-option"><input type="checkbox" id="sp1" value="חדר כושר (משקולות)"><label for="sp1">חדר כושר</label></div>
+          <div class="check-option"><input type="checkbox" id="sp2" value="ריצה / קרדיו"><label for="sp2">ריצה / קרדיו</label></div>
+          <div class="check-option"><input type="checkbox" id="sp3" value="יוגה / פילאטיס"><label for="sp3">יוגה / פילאטיס</label></div>
+          <div class="check-option"><input type="checkbox" id="sp4" value="אומנויות לחימה"><label for="sp4">אומנויות לחימה</label></div>
+          <div class="check-option"><input type="checkbox" id="sp5" value="שחייה"><label for="sp5">שחייה</label></div>
+          <div class="check-option"><input type="checkbox" id="sp6" value="ספורט קבוצתי"><label for="sp6">ספורט קבוצתי</label></div>
+          <div class="check-option"><input type="checkbox" id="sp7" value="אימון בבית"><label for="sp7">אימון בבית</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>רמת כושר נוכחית (הערכה עצמית)</label>
+        <div class="scale-wrap">
+          <div class="scale-row">
+            <input type="range" id="q_fitness" min="1" max="10" value="5" oninput="document.getElementById('fit_val').textContent=this.value">
+            <div class="scale-value" id="fit_val">5</div>
+          </div>
+          <div class="scale-labels"><span>מתחיל מוחלט</span><span>ספורטאי מנוסה</span></div>
+        </div>
+      </div>
+      <div class="section-divider"></div>
+      <div class="field-group">
+        <label>כמה אימונים בשבוע אתה מוכן להתחייב?</label>
+        <div class="radio-group">
+          <div class="radio-option"><input type="radio" name="q_freq" id="fr1" value="אימון 1 בשבוע"><label for="fr1">1 פעם</label></div>
+          <div class="radio-option"><input type="radio" name="q_freq" id="fr2" value="2 אימונים בשבוע"><label for="fr2">2 פעמים</label></div>
+          <div class="radio-option"><input type="radio" name="q_freq" id="fr3" value="3 אימונים בשבוע"><label for="fr3">3 פעמים</label></div>
+          <div class="radio-option"><input type="radio" name="q_freq" id="fr4" value="4+ אימונים בשבוע"><label for="fr4">4+</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>מה מניע אותך ביותר לפעולה?</label>
+        <div class="check-group">
+          <div class="check-option"><input type="checkbox" id="mt1" value="בריאות ואריכות ימים"><label for="mt1">בריאות</label></div>
+          <div class="check-option"><input type="checkbox" id="mt2" value="מראה חיצוני"><label for="mt2">מראה חיצוני</label></div>
+          <div class="check-option"><input type="checkbox" id="mt3" value="אנרגיה ותפקוד יומיומי"><label for="mt3">אנרגיה</label></div>
+          <div class="check-option"><input type="checkbox" id="mt4" value="ביטחון עצמי"><label for="mt4">ביטחון עצמי</label></div>
+          <div class="check-option"><input type="checkbox" id="mt5" value="לדוגמה לילדים"><label for="mt5">לדוגמה לילדים</label></div>
+          <div class="check-option"><input type="checkbox" id="mt6" value="אירוע קרוב"><label for="mt6">אירוע קרוב</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>הציוד הזמין לך בבית</label>
+        <div class="check-group">
+          <div class="check-option"><input type="checkbox" id="eq1" value="משקולות יד"><label for="eq1">משקולות יד</label></div>
+          <div class="check-option"><input type="checkbox" id="eq2" value="גומיות התנגדות"><label for="eq2">גומיות</label></div>
+          <div class="check-option"><input type="checkbox" id="eq3" value="מזרן"><label for="eq3">מזרן</label></div>
+          <div class="check-option"><input type="checkbox" id="eq4" value="כדור פיזיו"><label for="eq4">כדור פיזיו</label></div>
+          <div class="check-option"><input type="checkbox" id="eq5" value="אין ציוד"><label for="eq5">אין ציוד</label></div>
+        </div>
+      </div>
+      <div class="field-group">
+        <label>הערות נוספות / משהו שרצית להגיד למאמן</label>
+        <textarea id="q_notes" placeholder="כל מידע שיעזור לנו להתאים לך את האימון המושלם..."></textarea>
+      </div>
+    </div>
+    <div class="nav-btns">
+      <button class="btn-back" onclick="prevStep(3)">← חזרה</button>
+      <button class="btn-generate" onclick="generatePDF()">
+        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM6 20V4h5v7h7v9H6z"/></svg>
+        צור שאלון PDF ←
+      </button>
+    </div>
+  </div>
+
+  <!-- SUCCESS -->
+  <div class="success-screen" id="successScreen">
+    <div class="success-icon">✓</div>
+    <h2>השאלון <span>מוכן!</span></h2>
+    <p>כל הפרטים נאספו ונארזו בקובץ PDF מסודר. תוריד אותו ותשלח למאמן לפני האימון הראשון.</p>
+    <div>
+      <button class="download-btn" id="downloadBtn" onclick="downloadPDF()">
+        ⬇ הורד PDF
+      </button>
+      <a id="waShareBtn" href="#" target="_blank" class="wa-send-btn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        שלח למאמן בוואטסאפ
+      </a>
+    </div>
+  </div>
+
+</div>
+</main>
+
+<footer>© 2025 Body Factory Home · נתניה והסביבה · 054-636-5558</footer>
+
+<script>
+let currentStep = 0;
+const totalSteps = 4;
+let pdfDoc = null;
+
+function updateProgress(step) {
+  const pct = Math.round(((step + 1) / totalSteps) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '%';
+  document.getElementById('progressText').textContent = `שלב ${step + 1} מתוך ${totalSteps}`;
+  for (let i = 0; i < totalSteps; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.className = 'step-dot' + (i === step ? ' active' : i < step ? ' done' : '');
+  }
+}
+
+function nextStep(from) {
+  if (from === 0) {
+    const fn = document.getElementById('q_firstname').value.trim();
+    const ln = document.getElementById('q_lastname').value.trim();
+    if (!fn || !ln) { alert('אנא מלא שם פרטי ושם משפחה'); return; }
+  }
+  document.getElementById('step-' + from).classList.remove('active');
+  currentStep = from + 1;
+  document.getElementById('step-' + currentStep).classList.add('active');
+  updateProgress(currentStep);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function prevStep(from) {
+  document.getElementById('step-' + from).classList.remove('active');
+  currentStep = from - 1;
+  document.getElementById('step-' + currentStep).classList.add('active');
+  updateProgress(currentStep);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function getChecked(name) {
+  return [...document.querySelectorAll(`input[name="${name}"]:checked`)].map(e => e.value).join(', ') || '—';
+}
+function getCheckboxes(ids) {
+  return ids.map(id => document.getElementById(id)).filter(e => e && e.checked).map(e => e.value).join(', ') || '—';
+}
+function val(id) { const e = document.getElementById(id); return e ? (e.value.trim() || '—') : '—'; }
+
+function generatePDF() {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ orientation: 'p', unit: 'mm', format: 'a4' });
+
+  const name = val('q_firstname') + ' ' + val('q_lastname');
+  const date = new Date().toLocaleDateString('he-IL');
+
+  // Colors
+  const gold = [201, 168, 76];
+  const black = [8, 8, 8];
+  const white = [245, 245, 240];
+  const gray = [120, 120, 120];
+  const darkGray = [40, 40, 40];
+
+  let y = 0;
+
+  // Header background
+  doc.setFillColor(...black);
+  doc.rect(0, 0, 210, 297, 'F');
+
+  // Gold top bar
+  doc.setFillColor(...gold);
+  doc.rect(0, 0, 210, 28, 'F');
+
+  // Logo text
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(18);
+  doc.setTextColor(...black);
+  doc.text('BODY FACTORY HOME', 105, 17, { align: 'center' });
+
+  // Subtitle bar
+  doc.setFillColor(...darkGray);
+  doc.rect(0, 28, 210, 18, 'F');
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(...gold);
+  doc.text('שאלון בריאות ואימון אישי', 105, 39, { align: 'center' });
+
+  y = 58;
+
+  // Client info box
+  doc.setFillColor(...darkGray);
+  doc.rect(15, y - 6, 180, 22, 'F');
+  doc.setDrawColor(...gold);
+  doc.setLineWidth(0.5);
+  doc.rect(15, y - 6, 180, 22, 'S');
+
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(12);
+  doc.setTextColor(...gold);
+  doc.text(name, 105, y + 4, { align: 'center' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(...gray);
+  doc.text(`תאריך: ${date}  |  טלפון: ${val('q_phone')}`, 105, y + 10, { align: 'center' });
+
+  y += 28;
+
+  function drawSection(title, items) {
+    if (y > 250) { doc.addPage(); doc.setFillColor(...black); doc.rect(0, 0, 210, 297, 'F'); y = 20; }
+
+    // Section title
+    doc.setFillColor(...gold);
+    doc.rect(15, y, 180, 9, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(10);
+    doc.setTextColor(...black);
+    doc.text(title, 105, y + 6.5, { align: 'center' });
+    y += 13;
+
+    items.forEach(([label, value]) => {
+      if (y > 270) { doc.addPage(); doc.setFillColor(...black); doc.rect(0, 0, 210, 297, 'F'); y = 20; }
+
+      // Row background alternating
+      doc.setFillColor(22, 22, 22);
+      doc.rect(15, y - 1, 180, 8, 'F');
+
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(8.5);
+      doc.setTextColor(...gold);
+      doc.text(label + ':', 190, y + 5, { align: 'right' });
+
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(...white);
+      const lines = doc.splitTextToSize(value, 100);
+      doc.text(lines, 85, y + 5);
+      y += Math.max(8, lines.length * 5 + 3);
+    });
+    y += 6;
+  }
+
+  // Section 1
+  drawSection('פרטים אישיים ויעדים', [
+    ['שם מלא', name],
+    ['גיל', val('q_age')],
+    ['מין', getChecked('q_gender')],
+    ['גובה', val('q_height') + ' ס"מ'],
+    ['משקל נוכחי', val('q_weight') + ' ק"ג'],
+    ['משקל יעד', val('q_target_weight') + ' ק"ג'],
+    ['מטרה עיקרית', getChecked('q_goal')],
+    ['תיאור המטרה', val('q_goal_text')],
+  ]);
+
+  // Section 2
+  drawSection('היסטוריה רפואית ופציעות', [
+    ['מצב רפואי', getChecked('q_medical')],
+    ['פירוט רפואי', val('q_medical_detail')],
+    ['פציעות/ניתוחים', getChecked('q_injury')],
+    ['פירוט פציעות', val('q_injury_detail')],
+    ['כאבים פעילים', getCheckboxes(['pain_back','pain_neck','pain_knee','pain_shoulder','pain_hip','pain_ankle','pain_none'])],
+    ['תרופות', val('q_meds')],
+  ]);
+
+  // Section 3
+  drawSection('הרגלי תזונה ושינה', [
+    ['ארוחות ביום', getChecked('q_meals')],
+    ['סוג תזונה', getChecked('q_diet_type')],
+    ['אלרגיות/הגבלות', val('q_allergies')],
+    ['שעות שינה', document.getElementById('q_sleep').value],
+    ['רמת סטרס', document.getElementById('q_stress').value + ' / 10'],
+    ['שתיית מים', getChecked('q_water')],
+  ]);
+
+  // Section 4
+  drawSection('ניסיון ספורטיבי ואורח חיים', [
+    ['ניסיון אימונים', getChecked('q_exp')],
+    ['סוגי אימון קודמים', getCheckboxes(['sp1','sp2','sp3','sp4','sp5','sp6','sp7'])],
+    ['רמת כושר', document.getElementById('q_fitness').value + ' / 10'],
+    ['תדירות מבוקשת', getChecked('q_freq')],
+    ['מוטיבציה עיקרית', getCheckboxes(['mt1','mt2','mt3','mt4','mt5','mt6'])],
+    ['ציוד זמין', getCheckboxes(['eq1','eq2','eq3','eq4','eq5'])],
+    ['הערות', val('q_notes')],
+  ]);
+
+  // Footer on last page
+  doc.setFillColor(...darkGray);
+  doc.rect(0, 285, 210, 12, 'F');
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(...gold);
+  doc.text('Body Factory Home | 054-636-5558 | bodyfactory.co.il', 105, 292, { align: 'center' });
+
+  pdfDoc = doc;
+
+  // Show success screen
+  document.getElementById('step-3').classList.remove('active');
+  document.getElementById('successScreen').style.display = 'block';
+
+  // Update progress to 100%
+  document.getElementById('progressFill').style.width = '100%';
+  document.getElementById('progressPct').textContent = '100%';
+  document.getElementById('progressText').textContent = 'הושלם!';
+  document.querySelectorAll('.step-dot').forEach(d => { d.className = 'step-dot done'; });
+
+  // WA link with summary
+  const waMsg = `שאלון בריאות חדש מהאתר! 📋%0A👤 ${name}%0A🎯 מטרה: ${getChecked('q_goal')}%0A💪 ניסיון: ${getChecked('q_exp')}%0A📍 טלפון: ${val('q_phone')}`;
+  document.getElementById('waShareBtn').href = `https://wa.me/972546365558?text=${waMsg}`;
+
+  // Send email via EmailJS
+  const emailBody = `
+שאלון בריאות חדש התקבל!
+================================
+
+פרטים אישיים ויעדים
+--------------------
+שם: ${name}
+גיל: ${val('q_age')}
+מין: ${getChecked('q_gender')}
+גובה: ${val('q_height')} ס"מ
+משקל נוכחי: ${val('q_weight')} ק"ג
+משקל יעד: ${val('q_target_weight')} ק"ג
+טלפון: ${val('q_phone')}
+מטרה עיקרית: ${getChecked('q_goal')}
+תיאור מטרה: ${val('q_goal_text')}
+
+היסטוריה רפואית
+--------------------
+מצב רפואי: ${getChecked('q_medical')}
+פירוט: ${val('q_medical_detail')}
+פציעות: ${getChecked('q_injury')}
+פירוט פציעות: ${val('q_injury_detail')}
+כאבים פעילים: ${getCheckboxes(['pain_back','pain_neck','pain_knee','pain_shoulder','pain_hip','pain_ankle','pain_none'])}
+תרופות: ${val('q_meds')}
+
+תזונה ושינה
+--------------------
+ארוחות ביום: ${getChecked('q_meals')}
+סוג תזונה: ${getChecked('q_diet_type')}
+אלרגיות: ${val('q_allergies')}
+שעות שינה: ${document.getElementById('q_sleep').value}
+סטרס: ${document.getElementById('q_stress').value}/10
+מים ביום: ${getChecked('q_water')}
+
+ניסיון ספורטיבי
+--------------------
+ניסיון: ${getChecked('q_exp')}
+סוגי אימון: ${getCheckboxes(['sp1','sp2','sp3','sp4','sp5','sp6','sp7'])}
+רמת כושר: ${document.getElementById('q_fitness').value}/10
+תדירות: ${getChecked('q_freq')}
+מוטיבציה: ${getCheckboxes(['mt1','mt2','mt3','mt4','mt5','mt6'])}
+ציוד בבית: ${getCheckboxes(['eq1','eq2','eq3','eq4','eq5'])}
+הערות: ${val('q_notes')}
+  `.trim();
+
+  emailjs.send('service_20g29da', 'hvg7wg3', {
+    to_email: 'Tamirchai1012@gmail.com',
+    from_name: name,
+    subject: `שאלון בריאות חדש - ${name}`,
+    message: emailBody
+  }).then(() => {
+    console.log('Email sent!');
+  }).catch(err => {
+    console.warn('Email error:', err);
+  });
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function downloadPDF() {
+  if (pdfDoc) {
+    const name = val('q_firstname') + '_' + val('q_lastname');
+    pdfDoc.save(`שאלון_בריאות_${name}.pdf`);
+  }
+}
+</script>
+</body>
+</html>
