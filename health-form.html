@@ -826,7 +826,26 @@ function submitForm() {
   document.getElementById('waShareBtn').href = `https://wa.me/972546365558?text=${waMsg}`;
 
   // Send email via EmailJS
-emailjs.send('service_20g29da', 'template_esi87zw', {
+const leadData = {
+  height: document.getElementById('q_height')?.value || '',
+  weight: document.getElementById('q_weight')?.value || '',
+  targetWeight: document.getElementById('q_target_weight')?.value || '',
+  city: document.getElementById('q_city')?.value || '',
+  phone: document.getElementById('q_phone')?.value || '',
+  goal: getChecked('q_goal') || ''
+};
+
+fetch('https://script.google.com/macros/s/AKfycbz4fIH6fYAp_qtRVP2xvGtns0sxbKoqcA31I0ptjDKxDSWm0mi3dKesy8eA8iqaZZhTng/exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(leadData)
+})
+.then(res => res.text())
+.then(data => console.log('Lead saved to sheet:', data))
+.catch(err => console.error('Sheet error:', err));
+  emailjs.send('service_20g29da', 'template_esi87zw', {
     to_email: 'Tamirchai1012@gmail.com',
     from_name: name,
     subject: 'שאלון בריאות חדש - ' + name,
