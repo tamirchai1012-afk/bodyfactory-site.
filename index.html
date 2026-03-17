@@ -551,21 +551,7 @@ fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6
 
 document.getElementById('bookingForm').style.display = 'none';
 document.getElementById('successMsg').style.display = 'block';
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    firstName,
-    lastName,
-    city,
-    goal
-  })
-});
-  document.getElementById('bookingForm').style.display = 'none';
-  document.getElementById('successMsg').style.display = 'block';
 }
-
 window.addEventListener('scroll', () => {
   document.querySelector('nav').style.background = window.scrollY > 60 ? 'rgba(8,8,8,1)' : 'rgba(8,8,8,0.95)';
 });
