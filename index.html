@@ -540,16 +540,18 @@ function submitForm() {
   city,
   goal
 };
-
-alert(JSON.stringify(data, null, 2));
+  
+const params = new URLSearchParams({
+  firstName: firstName,
+  lastName: lastName,
+  city: city,
+  goal: goal
+});
 
 fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4d002Geow9hvBSLBsRvPg/exec", {
   method: "POST",
   mode: "no-cors",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(data)
+  body: params
 });
 document.getElementById('bookingForm').style.display = 'none';
 document.getElementById('successMsg').style.display = 'block';
