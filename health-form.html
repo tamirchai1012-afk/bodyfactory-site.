@@ -756,7 +756,6 @@ function getCheckboxes(ids) {
 }
 function val(id) { const e = document.getElementById(id); return e ? (e.value.trim() || '—') : '—'; }
 
-<script>
 function submitForm() {
   const firstName = document.getElementById('q_firstname')?.value.trim() || '';
   const lastName = document.getElementById('q_lastname')?.value.trim() || '';
@@ -767,15 +766,15 @@ function submitForm() {
   }
 
   const data = {
-    firstName,
-    lastName,
+    firstName: firstName,
+    lastName: lastName,
     age: document.getElementById('q_age')?.value.trim() || '',
-    gender: [...document.querySelectorAll('input[name="q_gender"]:checked')].map(e => e.value).join(', '),
+    gender: Array.from(document.querySelectorAll('input[name="q_gender"]:checked')).map(e => e.value).join(', '),
     height: document.getElementById('q_height')?.value.trim() || '',
     weight: document.getElementById('q_weight')?.value.trim() || '',
     targetWeight: document.getElementById('q_target_weight')?.value.trim() || '',
     phone: document.getElementById('q_phone')?.value.trim() || '',
-    goal: [...document.querySelectorAll('input[name="q_goal"]:checked')].map(e => e.value).join(', '),
+    goal: Array.from(document.querySelectorAll('input[name="q_goal"]:checked')).map(e => e.value).join(', '),
     notes: document.getElementById('q_notes')?.value.trim() || ''
   };
 
@@ -797,6 +796,6 @@ function submitForm() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
-
+  
 </body>
 </html>
