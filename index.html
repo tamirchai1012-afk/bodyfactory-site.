@@ -543,16 +543,14 @@ function submitForm() {
 
 alert(JSON.stringify(data, null, 2));
 
-fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4dOO2Geow9hvBSLBsRvPg/exec, {
+fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4d002Geow9hvBSLBsRvPg/exec", {
   method: "POST",
   mode: "no-cors",
   headers: {
     "Content-Type": "application/json"
   },
   body: JSON.stringify(data)
-  
 });
-
 document.getElementById('bookingForm').style.display = 'none';
 document.getElementById('successMsg').style.display = 'block';
 }
