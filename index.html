@@ -540,7 +540,32 @@ function submitForm() {
     `📍 עיר: ${city}%0A` +
     `🎯 מטרה ל-90 יום: ${goal}%0A` +
     `━━━━━━━━━━━━━━━`;
+fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4d002Geow9hvBSLBsRvPg/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    firstName,
+    lastName,
+    city,
+    goal
+  })
+});
 
+document.getElementById('bookingForm').style.display = 'none';
+document.getElementById('successMsg').style.display = 'block';
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    firstName,
+    lastName,
+    city,
+    goal
+  })
+});
   document.getElementById('bookingForm').style.display = 'none';
   document.getElementById('successMsg').style.display = 'block';
 }
