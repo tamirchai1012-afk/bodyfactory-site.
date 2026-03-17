@@ -534,14 +534,7 @@ function submitForm() {
     return;
   }
 
-  const data = {
-  firstName,
-  lastName,
-  city,
-  goal
-};
-  
-const params = new URLSearchParams({
+ const params = new URLSearchParams({
   firstName: firstName,
   lastName: lastName,
   city: city,
@@ -553,6 +546,7 @@ fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6
   mode: "no-cors",
   body: params
 });
+
 document.getElementById('bookingForm').style.display = 'none';
 document.getElementById('successMsg').style.display = 'block';
 }
