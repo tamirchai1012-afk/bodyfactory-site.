@@ -756,100 +756,47 @@ function getCheckboxes(ids) {
 }
 function val(id) { const e = document.getElementById(id); return e ? (e.value.trim() || '—') : '—'; }
 
+<script>
 function submitForm() {
-  const firstName = document.getElementById('q_firstname').value.trim();
-  const lastName  = document.getElementById('q_lastname').value.trim();
-  if (!firstName || !lastName) { alert('אנא מלא שם פרטי ושם משפחה'); return; }
+  const firstName = document.getElementById('q_firstname')?.value.trim() || '';
+  const lastName = document.getElementById('q_lastname')?.value.trim() || '';
 
-  const name = firstName + ' ' + lastName;
+  if (!firstName || !lastName) {
+    alert('אנא מלא שם פרטי ושם משפחה');
+    return;
+  }
 
-  const emailBody = `
-שאלון בריאות חדש התקבל!
-================================
+  const data = {
+    firstName,
+    lastName,
+    age: document.getElementById('q_age')?.value.trim() || '',
+    gender: [...document.querySelectorAll('input[name="q_gender"]:checked')].map(e => e.value).join(', '),
+    height: document.getElementById('q_height')?.value.trim() || '',
+    weight: document.getElementById('q_weight')?.value.trim() || '',
+    targetWeight: document.getElementById('q_target_weight')?.value.trim() || '',
+    phone: document.getElementById('q_phone')?.value.trim() || '',
+    goal: [...document.querySelectorAll('input[name="q_goal"]:checked')].map(e => e.value).join(', '),
+    notes: document.getElementById('q_notes')?.value.trim() || ''
+  };
 
-פרטים אישיים ויעדים
-שם: ${name}
-גיל: ${val('q_age')}
-מין: ${getChecked('q_gender')}
-גובה: ${val('q_height')} סמ
-משקל נוכחי: ${val('q_weight')} קג
-משקל יעד: ${val('q_target_weight')} קג
-טלפון: ${val('q_phone')}
-מטרה עיקרית: ${getChecked('q_goal')}
-תיאור מטרה: ${val('q_goal_text')}
-
-היסטוריה רפואית
-מצב רפואי: ${getChecked('q_medical')}
-פירוט: ${val('q_medical_detail')}
-פציעות: ${getChecked('q_injury')}
-פירוט פציעות: ${val('q_injury_detail')}
-כאבים פעילים: ${getCheckboxes(['pain_back','pain_neck','pain_knee','pain_shoulder','pain_hip','pain_ankle','pain_none'])}
-תרופות: ${val('q_meds')}
-
-תזונה ושינה
-ארוחות ביום: ${getChecked('q_meals')}
-סוג תזונה: ${getChecked('q_diet_type')}
-אלרגיות: ${val('q_allergies')}
-שעות שינה: ${document.getElementById('q_sleep').value}
-סטרס: ${document.getElementById('q_stress').value}/10
-מים ביום: ${getChecked('q_water')}
-
-ניסיון ספורטיבי
-ניסיון: ${getChecked('q_exp')}
-סוגי אימון: ${getCheckboxes(['sp1','sp2','sp3','sp4','sp5','sp6','sp7'])}
-רמת כושר: ${document.getElementById('q_fitness').value}/10
-תדירות: ${getChecked('q_freq')}
-מוטיבציה: ${getCheckboxes(['mt1','mt2','mt3','mt4','mt5','mt6'])}
-ציוד בבית: ${getCheckboxes(['eq1','eq2','eq3','eq4','eq5'])}
-הערות: ${val('q_notes')}
-  `.trim();
-
-  // Show success immediately
-  document.getElementById('step-3').classList.remove('active');
-  document.getElementById('successScreen').style.display = 'block';
-  document.getElementById('progressFill').style.width = '100%';
-  document.getElementById('progressPct').textContent = '100%';
-  document.getElementById('progressText').textContent = 'הושלם!';
-  document.querySelectorAll('.step-dot').forEach(d => { d.className = 'step-dot done'; });
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-
-  // WhatsApp link
-  const waMsg = encodeURIComponent(`שאלון בריאות חדש!\n👤 ${name}\n🎯 מטרה: ${getChecked('q_goal')}\n💪 ניסיון: ${getChecked('q_exp')}\n📞 טלפון: ${val('q_phone')}`);
-  document.getElementById('waShareBtn').href = `https://wa.me/972546365558?text=${waMsg}`;
-
-  // Send email via EmailJS
-const leadData = {
-  height: document.getElementById('q_height')?.value || '',
-  weight: document.getElementById('q_weight')?.value || '',
-  targetWeight: document.getElementById('q_target_weight')?.value || '',
-  city: document.getElementById('q_city')?.value || '',
-  phone: document.getElementById('q_phone')?.value || '',
-  goal: getChecked('q_goal') || ''
-};
-
-fetch('https://script.google.com/macros/s/AKfycbz4fIH6fYAp_qtRVP2xvGtns0sxbKoqcA31I0ptjDKxDSWm0mi3dKesy8eA8iqaZZhTng/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify(leadData)
-})
-.then(res => res.text())
-.then(data => console.log('Lead saved to sheet:', data))
-.catch(err => console.error('Sheet error:', err));
-  emailjs.send('service_20g29da', 'template_esi87zw', {
-    to_email: 'Tamirchai1012@gmail.com',
-    from_name: name,
-    subject: 'שאלון בריאות חדש - ' + name,
-    message: emailBody
-  }).then(() => {
-    console.log('Email sent!');
-  }).catch(err => {
-    console.warn('Email error:', err);
+  fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4d002Geow9hvBSLBsRvPg/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
   });
+
+  const formSteps = document.querySelector('.form-shell') || document.querySelector('main');
+  const successScreen = document.getElementById('successScreen');
+
+  if (formSteps) formSteps.style.display = 'none';
+  if (successScreen) successScreen.style.display = 'block';
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-
 </script>
+
 </body>
 </html>
