@@ -531,28 +531,45 @@ function submitForm() {
   const firstName = document.getElementById('firstName').value.trim();
   const lastName = document.getElementById('lastName').value.trim();
   const city = document.getElementById('city').value.trim();
+  const phone = document.getElementById('phone').value.trim();
   const goal = document.getElementById('goal').value.trim();
 
-  if (!firstName || !lastName || !city || !goal) {
+  if (!firstName || !lastName || !phone || !city || !goal) {
     alert('אנא מלא את כל השדות המסומנים');
     return;
   }
 
- const params = new URLSearchParams({
-  firstName: firstName,
-  lastName: lastName,
-  city: city,
-  goal: goal
+  fetch('https://script.google.com/macros/s/AKfycbz4fIH6fYAp_qtRVP2xvGtns0sxbKoqcA31I0ptjDKxDSWm0mi3dKesy8eA8iqaZZhTng/exec', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    firstName: firstName,
+    lastName: lastName,
+    phone: phone,
+    city: city,
+    goal: goal
+  })
+})
+.then(response => response.json())
+.then(result => {
+  if (result.result === 'success') {
+    document.getElementById('successMsg').style.display = 'block';
+    document.getElementById('firstName').value = '';
+    document.getElementById('lastName').value = '';
+    document.getElementById('phone').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('goal').value = '';
+  } else {
+    alert('משהו השתבש, נסה שוב.');
+    console.error(result.message);
+  }
+})
+.catch(error => {
+  alert('שגיאה בשליחת הטופס');
+  console.error(error);
 });
-
-fetch("https://script.google.com/macros/s/AKfycbzR9QYsEQ1zotZagKvlTyeLsmYj7n1rm6qYICUvdRXZpBH_f4d002Geow9hvBSLBsRvPg/exec", {
-  method: "POST",
-  mode: "no-cors",
-  body: params
-});
-
-document.getElementById('bookingForm').style.display = 'none';
-document.getElementById('successMsg').style.display = 'block';
 }
 window.addEventListener('scroll', () => {
   document.querySelector('nav').style.background = window.scrollY > 60 ? 'rgba(8,8,8,1)' : 'rgba(8,8,8,0.95)';
