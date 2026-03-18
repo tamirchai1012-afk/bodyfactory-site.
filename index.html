@@ -558,10 +558,10 @@ fetch('https://script.google.com/macros/s/AKfycbz9PnXpA2EJT74xnOZ9yvWO4wQC9hIT80
     document.getElementById('phone').value = '';
     document.getElementById('city').value = '';
     document.getElementById('goal').value = '';
-  } else {
-    alert('משהו השתבש, נסה שוב.');
-    console.error(result.message);
-  }
+ } else {
+  alert(result.message || 'משהו השתבש, נסה שוב.');
+  console.error(result.message);
+}
 })
 .catch(error => {
   alert('שגיאה בשליחת הטופס');
