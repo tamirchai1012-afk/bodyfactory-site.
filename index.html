@@ -562,10 +562,13 @@ fetch('https://script.google.com/macros/s/AKfycbz9PnXpA2EJT74xnOZ9yvWO4wQC9hIT80
   alert(result.message || 'משהו השתבש, נסה שוב.');
   console.error(result.message);
 }
+btn.disabled = false;
 })
 .catch(error => {
-  alert('שגיאה בשליחת הטופס');
+  alert('שגיאה כללית');
   console.error(error);
+
+  btn.disabled = false; // 👈 הוספת פה
 });
 }
 window.addEventListener('scroll', () => {
