@@ -539,11 +539,8 @@ function submitForm() {
     return;
   }
 
-  fetch('https://script.google.com/macros/s/AKfycbz4fIH6fYAp_qtRVP2xvGtns0sxbKoqcA31I0ptjDKxDSWm0mi3dKesy8eA8iqaZZhTng/exec', {
+fetch('https://script.google.com/macros/s/AKfycbz4fIH6fYAp_qtRVP2xvGtns0sxbKoqcA31I0ptjDKxDSWm0mi3dKesy8eA8iqaZZhTng/exec', {
   method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
   body: JSON.stringify({
     firstName: firstName,
     lastName: lastName,
