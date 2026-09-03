@@ -7,7 +7,7 @@
   <title>Tamir Body Factory | סטודיו בוטיק לאימונים אישיים בנתניה</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">">
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root{
       --black:#050505;
@@ -28,6 +28,10 @@
     body{font-family:'Rubik',sans-serif;background:var(--black);color:var(--white);overflow-x:hidden}
     a{color:inherit}
     img{max-width:100%;display:block}
+    button,input,textarea{font:inherit}
+    :focus-visible{outline:3px solid var(--gold-light);outline-offset:4px}
+    .skip-link{position:fixed;top:12px;right:12px;z-index:3000;background:var(--gold);color:#050505;padding:12px 18px;font-weight:900;text-decoration:none;transform:translateY(-160%);transition:transform .2s}
+    .skip-link:focus{transform:translateY(0)}
     .container{width:min(var(--max),calc(100% - 40px));margin:auto}
     .section{padding:100px 0}
     .eyebrow{color:var(--gold);font-size:.8rem;font-weight:800;letter-spacing:.18em;margin-bottom:14px}
@@ -70,6 +74,12 @@
     .proof-item strong{display:block;color:var(--gold);font-size:1.55rem;font-weight:900}
     .proof-item span{font-size:.8rem;color:var(--muted)}
 
+    .studio-showcase{padding:34px 0 0;background:var(--black)}
+    .studio-frame{position:relative;overflow:hidden;aspect-ratio:3.12/1;border:1px solid var(--gold-line);background:#000;box-shadow:0 26px 80px rgba(0,0,0,.42)}
+    .studio-frame img{position:absolute;top:50%;left:50%;width:100%;max-width:none;height:auto;transform:translate(-50%,-50%) scale(1.13);transform-origin:center}
+    .studio-caption{display:flex;justify-content:space-between;gap:20px;align-items:center;padding:18px 2px 0;color:var(--muted);font-size:.9rem}
+    .studio-caption strong{color:var(--gold);font-size:1rem}
+
     .why-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:75px;align-items:start}
     .statement{font-size:clamp(2.1rem,4.2vw,4.2rem);font-weight:900;line-height:1.08;letter-spacing:-.035em;position:sticky;top:130px}
     .why-cards{display:grid;gap:14px}
@@ -78,6 +88,16 @@
     .icon{width:56px;height:56px;display:grid;place-items:center;border:1px solid var(--gold-line);color:var(--gold);font-size:1.45rem}
     .why-card h3{font-size:1.2rem;margin-bottom:8px}
     .why-card p{color:var(--muted);line-height:1.8;font-size:.94rem}
+
+    .coach{background:var(--black-2);border-block:1px solid var(--line)}
+    .coach-grid{display:grid;grid-template-columns:.88fr 1.12fr;gap:72px;align-items:center}
+    .coach-photo{position:relative;min-height:560px;border:1px solid var(--gold-line);overflow:hidden;background:var(--card)}
+    .coach-photo:after{content:"";position:absolute;inset:auto 0 0;height:38%;background:linear-gradient(transparent,rgba(0,0,0,.72));pointer-events:none}
+    .coach-photo img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:center 28%}
+    .coach-copy .lead{max-width:650px}
+    .coach-points{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:30px}
+    .coach-point{border:1px solid var(--line);background:var(--card);padding:18px;color:#deded9;font-weight:700}
+    .coach-point span{display:block;color:var(--gold);font-size:.76rem;letter-spacing:.12em;margin-bottom:6px}
 
     .services{background:var(--black-2);border-block:1px solid var(--line)}
     .services-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:48px}
@@ -142,13 +162,27 @@
 
     .floating{position:fixed;left:22px;bottom:22px;width:58px;height:58px;border-radius:50%;background:var(--green);display:grid;place-items:center;text-decoration:none;z-index:999;box-shadow:0 10px 35px rgba(37,211,102,.28)}
     .floating svg{width:28px;fill:#fff}
+    .accessibility-toggle{position:fixed;right:22px;bottom:22px;width:58px;height:58px;border-radius:50%;border:2px solid var(--gold);background:#0b0b0b;color:var(--gold-light);display:grid;place-items:center;z-index:1200;font-size:1.55rem;cursor:pointer;box-shadow:0 10px 35px rgba(0,0,0,.42)}
+    .accessibility-panel{position:fixed;right:22px;bottom:92px;z-index:1199;width:min(330px,calc(100vw - 32px));background:var(--card);border:1px solid var(--gold-line);padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.72)}
+    .accessibility-panel[hidden]{display:none}
+    .accessibility-panel h2{font-size:1.25rem;margin-bottom:6px}
+    .accessibility-panel p{color:var(--muted);font-size:.82rem;line-height:1.6;margin-bottom:16px}
+    .accessibility-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+    .accessibility-actions button{border:1px solid var(--line);background:#191919;color:#fff;padding:11px 9px;cursor:pointer;font-weight:700}
+    .accessibility-actions button:hover,.accessibility-actions button[aria-pressed="true"]{border-color:var(--gold);color:var(--gold-light)}
+    html.access-text-large{font-size:112.5%}
+    body.access-contrast{--black:#000;--black-2:#000;--card:#000;--card-2:#000;--white:#fff;--muted:#fff;--line:rgba(255,255,255,.7);--gold:#ffd84f;--gold-light:#fff176;--gold-line:#ffd84f}
+    body.access-links a:not(.btn){text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:.2em}
+    body.access-motion *,body.access-motion *::before,body.access-motion *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    body.access-motion .reveal{opacity:1;transform:none}
     .reveal{opacity:0;transform:translateY(28px);transition:.7s ease}
     .reveal.visible{opacity:1;transform:none}
 
-    @media(max-width:1000px){
+    @media(max-width:1120px){
       .nav-links a:not(.nav-cta){display:none}
-      .hero-wrap,.why-grid,.contact-grid{grid-template-columns:1fr}
+      .hero-wrap,.why-grid,.coach-grid,.contact-grid{grid-template-columns:1fr}
       .hero-mark{max-width:500px}.statement{position:static}
+      .coach-photo{min-height:500px;max-width:650px;width:100%}
       .services-grid{grid-template-columns:repeat(2,1fr)}
       .process-grid{grid-template-columns:repeat(2,1fr)}
       .step{border-bottom:1px solid var(--line)}
@@ -156,26 +190,44 @@
     }
     @media(max-width:640px){
       .container{width:min(100% - 26px,var(--max))}.section{padding:72px 0}.nav-inner{height:76px}.brand img{width:73px;height:48px}.brand-copy strong{font-size:.82rem}.brand-copy span{font-size:.55rem}.nav-cta{padding:10px 13px;font-size:.78rem}
-      .hero{padding-top:125px}.hero h1{font-size:3.2rem}.hero p{font-size:1rem}.hero-mark{padding:28px 18px}.hero-mark img{width:220px}
+      .hero{padding-top:118px;min-height:auto}.hero h1{font-size:clamp(2.55rem,13vw,3.2rem)}.hero p{font-size:1rem}.hero-actions .btn{width:100%}.hero-mark{padding:28px 18px}.hero-mark img{width:220px}
+      .studio-showcase{padding-top:18px}.studio-frame{aspect-ratio:1.58/1}.studio-frame img{transform:translate(-50%,-50%) scale(2.26)}.studio-caption{display:block}.studio-caption span{display:block;margin-top:5px}
+      .coach-photo{min-height:430px}.coach-points{grid-template-columns:1fr}.coach-grid{gap:34px}
       .proof-grid{grid-template-columns:1fr 1fr}.proof-item:nth-child(2){border-left:0}.proof-item:nth-child(-n+2){border-bottom:1px solid var(--line)}
       .services-grid,.process-grid,.testimonials-grid,.chart-footer{grid-template-columns:1fr}.service-card{min-height:220px}.service-card h3{margin-top:38px}.process-grid{border:0}.step{border:1px solid var(--line);margin-bottom:10px}
-      .chart-card{padding:20px 14px}.chart-wrap{height:315px}.chart-note{width:145px;font-size:.69rem;padding:9px}.note-start{right:3%;bottom:35px}.note-doubt{right:37%;bottom:100px}.note-break{left:2%;top:10px}.chart-head{display:block}.chart-head p{margin-top:10px}.form-row{grid-template-columns:1fr}.form{padding:25px 18px}.footer-inner{flex-direction:column;text-align:center}.floating{left:14px;bottom:14px}
+      .chart-card{padding:20px 14px}.chart-wrap{height:315px}.chart-note{width:145px;font-size:.69rem;padding:9px}.note-start{right:3%;bottom:35px}.note-doubt{right:37%;bottom:100px}.note-break{left:2%;top:10px}.chart-head{display:block}.chart-head p{margin-top:10px}.form-row{grid-template-columns:1fr}.form{padding:25px 18px}.footer-inner{flex-direction:column;text-align:center}.floating{left:14px;bottom:14px}.accessibility-toggle{right:14px;bottom:14px}.accessibility-panel{right:14px;bottom:82px}
     }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.reveal{opacity:1;transform:none;transition:none}.btn,.why-card,.service-card{transition:none}}
   </style>
 </head>
 <body>
-  <nav>
+  <a class="skip-link" href="#main-content">דלג לתוכן המרכזי</a>
+  <button class="accessibility-toggle" id="accessibilityToggle" type="button" aria-controls="accessibilityPanel" aria-expanded="false" aria-label="פתיחת תפריט נגישות">♿</button>
+  <section class="accessibility-panel" id="accessibilityPanel" aria-labelledby="accessibilityTitle" hidden>
+    <h2 id="accessibilityTitle">כלי נגישות</h2>
+    <p>אפשר להתאים את תצוגת האתר. ההגדרות נשמרות במכשיר שלך.</p>
+    <div class="accessibility-actions">
+      <button type="button" data-access-action="text" aria-pressed="false">הגדלת טקסט</button>
+      <button type="button" data-access-action="contrast" aria-pressed="false">ניגודיות גבוהה</button>
+      <button type="button" data-access-action="links" aria-pressed="false">הדגשת קישורים</button>
+      <button type="button" data-access-action="motion" aria-pressed="false">עצירת תנועה</button>
+      <button type="button" data-access-action="reset">איפוס הגדרות</button>
+    </div>
+  </section>
+
+  <nav aria-label="ניווט ראשי">
     <div class="container nav-inner">
       <a href="#top" class="brand" aria-label="Tamir Body Factory">
       <img src="tamir-body-factory-logo.png" alt="הלוגו של Tamir Body Factory">
         <div class="brand-copy"><strong>Tamir Body Factory</strong><span>Personal Training</span></div>
       </a>
       <div class="nav-links">
-        <a href="#why">למה אנחנו</a><a href="#services">שירותים</a><a href="#process">התהליך</a><a href="#reviews">המלצות</a><a href="#contact" class="nav-cta">קבע פגישת היכרות</a>
+        <a href="#why">למה אנחנו</a><a href="#about">מי אני</a><a href="#services">שירותים</a><a href="#process">התהליך</a><a href="#reviews">המלצות</a><a href="#contact" class="nav-cta">קבע פגישת היכרות</a>
       </div>
     </div>
   </nav>
 
+  <main id="main-content">
   <header class="hero" id="top">
     <div class="container hero-wrap">
       <div class="reveal">
@@ -204,6 +256,15 @@
     </div>
   </section>
 
+  <section class="studio-showcase" aria-labelledby="studioTitle">
+    <div class="container">
+      <figure>
+        <div class="studio-frame"><img src="bodyfactory-studio.png" alt="סטודיו Body Factory בכיכר העצמאות 4 בנתניה" width="1284" height="2778"></div>
+        <figcaption class="studio-caption"><strong id="studioTitle">זה המקום שבו עובדים.</strong><span>סטודיו בוטיק מאובזר, שקט ואישי בלב נתניה.</span></figcaption>
+      </figure>
+    </div>
+  </section>
+
   <section class="section" id="why">
     <div class="container why-grid">
       <div class="statement reveal">לא בנינו עוד סטודיו.<br><span class="gold">בנינו מקום שעוזר לאנשים להתמיד.</span></div>
@@ -211,6 +272,22 @@
         <article class="why-card reveal"><div class="icon">01</div><div><h3>מסגרת שלא נותנת לך להיעלם</h3><p>אימונים קבועים, מעקב וליווי אישי שמחזירים אותך למסלול גם בשבועות פחות טובים.</p></div></article>
         <article class="why-card reveal"><div class="icon">02</div><div><h3>תוכנית שמתאימה לחיים שלך</h3><p>לא תוכנית גנרית. האימונים והתזונה מותאמים למטרות, ליכולת ולשגרה שלך.</p></div></article>
         <article class="why-card reveal"><div class="icon">03</div><div><h3>יחס של סטודיו בוטיק</h3><p>מעט מתאמנים בכל שעה, תשומת לב אמיתית ודיוק בכל תרגיל ובכל שלב.</p></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section coach" id="about">
+    <div class="container coach-grid">
+      <figure class="coach-photo reveal"><img src="tamir-coach.jpeg" alt="תמיר כתריאל, מאמן הכושר של Body Factory" width="1284" height="1277" loading="lazy"></figure>
+      <div class="coach-copy reveal">
+        <div class="eyebrow">מי מלווה אותך</div>
+        <h2 class="title">היי, אני תמיר.<br><span class="gold">המאמן שנשאר איתך בתהליך.</span></h2>
+        <p class="lead">Body Factory נבנה מתוך אמונה שאנשים לא צריכים עוד תוכנית גנרית — הם צריכים מסגרת אישית, מקצועית ועקבית שמתאימה לחיים שלהם.</p>
+        <p class="lead">לכן בכל שעה מתאמנים עד ארבעה אנשים בלבד. אני מכיר את היכולת, המטרה והקצב של כל מתאמן, ודואג שאף אחד לא ייעלם בתוך הקבוצה.</p>
+        <div class="coach-points">
+          <div class="coach-point"><span>יחס אישי</span>עד ארבעה מתאמנים בלבד</div>
+          <div class="coach-point"><span>ליווי אמיתי</span>מעקב גם מעבר לאימון</div>
+        </div>
       </div>
     </div>
   </section>
@@ -249,7 +326,8 @@
         <div class="chart-head"><h3>התוצאות אינן קו ישר</h3><p>בתחילת הדרך המאמץ מורגש יותר מהתוצאה. זה לא אומר שהתהליך לא עובד — זה אומר שהבסיס עדיין נבנה.</p></div>
         <div class="chart-wrap">
           <span class="axis-y">תוצאות ושינוי</span><span class="axis-x">זמן</span>
-          <svg class="chart-svg" viewBox="0 0 1000 390" preserveAspectRatio="none" aria-label="גרף התמדה לאורך זמן">
+          <svg class="chart-svg" viewBox="0 0 1000 390" preserveAspectRatio="none" role="img" aria-labelledby="chartTitle chartDescription">
+            <title id="chartTitle">גרף התמדה לאורך זמן</title><desc id="chartDescription">הגרף מציג התקדמות הדרגתית שמתגברת לאחר תקופה של התמדה.</desc>
             <defs><linearGradient id="fillGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d3a72c" stop-opacity=".28"/><stop offset="1" stop-color="#d3a72c" stop-opacity="0"/></linearGradient></defs>
             <path d="M0 345 C120 292 230 295 340 278 C470 260 540 250 620 185 C710 112 760 68 830 62 C900 57 945 42 1000 12 L1000 390 L0 390 Z" fill="url(#fillGold)"/>
             <path d="M0 345 C120 292 230 295 340 278 C470 260 540 250 620 185 C710 112 760 68 830 62 C900 57 945 42 1000 12" fill="none" stroke="#d3a72c" stroke-width="6"/>
@@ -295,24 +373,67 @@
         </div>
         <a class="btn btn-primary" style="margin-top:30px" href="https://wa.me/972537255526?text=%D7%94%D7%99%D7%99%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D" target="_blank" rel="noopener">שלח הודעה ב־WhatsApp</a>
       </div>
-      <form class="form reveal" onsubmit="submitForm(event)">
+      <form class="form reveal" onsubmit="submitForm(event)" aria-describedby="formHelp">
         <h3>קבע פגישת היכרות</h3>
-        <div class="form-row"><div class="field"><label for="firstName">שם פרטי</label><input id="firstName" required></div><div class="field"><label for="lastName">שם משפחה</label><input id="lastName" required></div></div>
-        <div class="form-row"><div class="field"><label for="phone">טלפון</label><input id="phone" inputmode="tel" required></div><div class="field"><label for="city">עיר</label><input id="city" required></div></div>
-        <div class="field"><label for="goal">מה היית רוצה להשיג?</label><textarea id="goal" required></textarea></div>
+        <p class="lead" id="formHelp" style="font-size:.86rem;margin:0 0 18px">כל השדות בטופס נדרשים.</p>
+        <div class="form-row"><div class="field"><label for="firstName">שם פרטי</label><input id="firstName" name="firstName" autocomplete="given-name" required></div><div class="field"><label for="lastName">שם משפחה</label><input id="lastName" name="lastName" autocomplete="family-name" required></div></div>
+        <div class="form-row"><div class="field"><label for="phone">טלפון</label><input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required></div><div class="field"><label for="city">עיר</label><input id="city" name="city" autocomplete="address-level2" required></div></div>
+        <div class="field"><label for="goal">מה היית רוצה להשיג?</label><textarea id="goal" name="goal" required></textarea></div>
         <button class="btn btn-primary" style="width:100%" type="submit" id="submitBtn">שלח פרטים</button>
-        <div class="success" id="successMsg">הפרטים התקבלו. אחזור אליך בהקדם.</div>
+        <div class="success" id="successMsg" role="status" aria-live="polite">הפרטים התקבלו. אחזור אליך בהקדם.</div>
       </form>
     </div>
   </section>
+  </main>
 
   <footer class="site-footer"><div class="container footer-inner"><div class="footer-brand"><img src="tamir-body-factory-logo.png" alt=""><span>Tamir Body Factory</span></div><span>© 2026 Tamir Body Factory · כל הזכויות שמורות</span><span>כיכר העצמאות 4, נתניה</span></div></footer>
 
-  <a class="floating" href="https://wa.me/972537255526?text=%D7%94%D7%99%D7%99%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D" target="_blank" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26C2.167 6.443 6.612 2.01 12.064 2.01c2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.895 9.884M20.463 3.488A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>
+  <a class="floating" href="https://wa.me/972537255526?text=%D7%94%D7%99%D7%99%20%D7%90%D7%A9%D7%9E%D7%97%20%D7%9C%D7%A4%D7%A8%D7%98%D7%99%D7%9D" target="_blank" rel="noopener" aria-label="פתיחת שיחה עם Body Factory ב־WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347M12.05 21.785h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26C2.167 6.443 6.612 2.01 12.064 2.01c2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.895 9.884M20.463 3.488A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg></a>
 
   <script>
-    const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')}),{threshold:.08});
-    document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+    const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduceMotion){document.querySelectorAll('.reveal').forEach(el=>el.classList.add('visible'))}
+    else{
+      const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting)entry.target.classList.add('visible')}),{threshold:.08});
+      document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+    }
+
+    const accessToggle=document.getElementById('accessibilityToggle');
+    const accessPanel=document.getElementById('accessibilityPanel');
+    const accessClasses={text:'access-text-large',contrast:'access-contrast',links:'access-links',motion:'access-motion'};
+    let savedAccess={};
+    try{savedAccess=JSON.parse(localStorage.getItem('bodyFactoryAccessibility')||'{}')}catch(error){savedAccess={}}
+
+    function applyAccessibility(){
+      Object.entries(accessClasses).forEach(([key,className])=>{
+        const target=key==='text'?document.documentElement:document.body;
+        target.classList.toggle(className,Boolean(savedAccess[key]));
+        const button=document.querySelector(`[data-access-action="${key}"]`);
+        if(button)button.setAttribute('aria-pressed',String(Boolean(savedAccess[key])));
+      });
+      localStorage.setItem('bodyFactoryAccessibility',JSON.stringify(savedAccess));
+    }
+
+    accessToggle.addEventListener('click',()=>{
+      const isOpen=!accessPanel.hidden;
+      accessPanel.hidden=isOpen;
+      accessToggle.setAttribute('aria-expanded',String(!isOpen));
+      accessToggle.setAttribute('aria-label',isOpen?'פתיחת תפריט נגישות':'סגירת תפריט נגישות');
+      if(!isOpen)accessPanel.querySelector('button').focus();
+    });
+
+    document.querySelectorAll('[data-access-action]').forEach(button=>button.addEventListener('click',()=>{
+      const action=button.dataset.accessAction;
+      if(action==='reset')Object.keys(savedAccess).forEach(key=>delete savedAccess[key]);
+      else savedAccess[action]=!savedAccess[action];
+      applyAccessibility();
+    }));
+
+    document.addEventListener('keydown',event=>{
+      if(event.key==='Escape'&&!accessPanel.hidden){accessPanel.hidden=true;accessToggle.setAttribute('aria-expanded','false');accessToggle.focus()}
+    });
+
+    applyAccessibility();
 
     async function submitForm(event){
       event.preventDefault();
