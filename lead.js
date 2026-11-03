@@ -3,9 +3,9 @@ form.addEventListener('submit', async event => {
   event.preventDefault();
   const button = form.querySelector('button'), status = document.querySelector('#successMsg');
   if (button.disabled) return;
-  const data = Object.fromEntries([...new FormData(form)].map(([k,v])=>[k,v.trim()]));
-  if(Object.values(data).some(v=>!v) || !/^(0[2-9]\d{7,8}|\+972[2-9]\d{7,8})$/.test(data.phone.replace(/[\s-]/g,''))) {
-    status.textContent='בדקו שכל השדות מלאים ושמספר הטלפון תקין.'; return;
+  const data = Object.assign({lastName:'', city:''}, Object.fromEntries([...new FormData(form)].map(([k,v])=>[k,v.trim()])));
+  if(!data.firstName || !data.phone || !/^(0[2-9]\d{7,8}|\+972[2-9]\d{7,8})$/.test(data.phone.replace(/[\s-]/g,''))) {
+    status.textContent='צריך שם ומספר טלפון תקין.'; return;
   }
   button.disabled=true; button.textContent='שולח…'; status.textContent='';
   try {

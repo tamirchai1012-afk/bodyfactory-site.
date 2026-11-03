@@ -24,8 +24,7 @@ paintScroll();
   wrap.className = 'bf-social-float';
   wrap.setAttribute('aria-label', 'יצירת קשר ברשתות חברתיות');
   const links = [
-    ['WhatsApp', 'https://wa.me/972537255526?text=' + encodeURIComponent('היי תמיר, הגעתי דרך האתר של Body Factory ורציתי לשמוע על אימון ניסיון.'), 'wa'],
-    ['Instagram', 'https://www.instagram.com/tamirchai1/', 'ig']
+    ['WhatsApp', 'https://wa.me/972537255526?text=' + encodeURIComponent('היי תמיר, הגעתי דרך האתר של Body Factory ורציתי לשמוע על אימון ניסיון.'), 'wa']
   ];
   for (const [label, url, type] of links) {
     const a = document.createElement('a');
@@ -41,4 +40,9 @@ paintScroll();
     wrap.appendChild(a);
   }
   document.body.appendChild(wrap);
+  /* Step aside while the lead form is on screen: it already has its own WhatsApp option */
+  const trial = document.querySelector('#trial');
+  if (trial && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => wrap.classList.toggle('is-tucked', e.isIntersecting), {threshold: .15}).observe(trial);
+  }
 })();
