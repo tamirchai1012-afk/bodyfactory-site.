@@ -6,3 +6,13 @@
 .film-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(16px,3vw,36px);max-width:800px;margin:28px auto 0}.film-grid video{display:block;width:100%;aspect-ratio:9/16;object-fit:contain;background:#111;border:1px solid var(--line)}.film-grid figcaption{padding:12px 0;font-size:18px;font-weight:700}.gallery .films{padding:28px 0 55px;border-top:1px solid var(--line)}.gallery .films h2{font-size:clamp(34px,5vw,62px);margin-top:12px}.gallery-link .btn{margin:4px 0 4px 6px}@media(max-width:600px){.film-grid{grid-template-columns:minmax(0,1fr);max-width:360px;gap:24px}}
 
 #studio-films .film-grid{grid-template-columns:minmax(0,1fr);max-width:380px}
+
+/* Floating social links, visible while scrolling */
+.bf-social-float{position:fixed;left:18px;bottom:22px;z-index:999;display:flex;flex-direction:column;gap:11px;direction:ltr}
+.bf-social{display:grid;place-items:center;width:53px;height:53px;border-radius:50%;color:white!important;border:1px solid #ffffff35;box-shadow:0 6px 25px #0008;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease}
+.bf-social:hover,.bf-social:focus-visible{transform:translateY(-3px) scale(1.05);box-shadow:0 9px 26px #000a;outline:2px solid #e9bc43;outline-offset:3px}
+.bf-social svg{width:26px;height:26px}
+.bf-social-wa{background:#1caa60}
+.bf-social-ig{background:linear-gradient(35deg,#f7b043,#df267a 48%,#6633c5)}
+@media(max-width:600px){.bf-social-float{left:12px;bottom:calc(14px + env(safe-area-inset-bottom));gap:9px}.bf-social{width:47px;height:47px}.bf-social svg{width:24px;height:24px}}
+@media(prefers-reduced-motion:reduce){.bf-social{transition:none}}
