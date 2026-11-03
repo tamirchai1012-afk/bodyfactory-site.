@@ -16,3 +16,32 @@
 .bf-social-ig{background:linear-gradient(35deg,#f7b043,#df267a 48%,#6633c5)}
 @media(max-width:600px){.bf-social-float{left:12px;bottom:calc(14px + env(safe-area-inset-bottom));gap:9px}.bf-social{width:47px;height:47px}.bf-social svg{width:24px;height:24px}}
 @media(prefers-reduced-motion:reduce){.bf-social{transition:none}}
+
+/* Premium interface refinement — inspired by contemporary design systems */
+:root{--bf-ease:cubic-bezier(.22,1,.36,1)}
+body{background:#090909}
+nav{backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);background:rgba(10,10,10,.83)!important}
+.hero{position:relative;isolation:isolate}
+.hero:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:radial-gradient(ellipse at 78% 18%,rgba(234,185,75,.11),transparent 40%);opacity:.9}
+.hero .eyebrow,.section .eyebrow{letter-spacing:.19em}
+.hero h1{line-height:1.06;text-wrap:balance}
+.hero p{max-width:570px;line-height:1.85}
+.section h2,.gallery-link h2,.trial h2{text-wrap:balance;letter-spacing:-.035em}
+.section .lead{line-height:1.9}
+.card{position:relative;overflow:hidden;border:1px solid rgba(233,188,67,.16);background:linear-gradient(140deg,#1d1b18,#111110 75%);transition:transform .45s var(--bf-ease),border-color .35s ease,box-shadow .45s ease}
+.card:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 20% 0%,rgba(233,188,67,.11),transparent 55%);opacity:0;transition:opacity .4s}
+.card:hover{transform:translateY(-7px);border-color:rgba(233,188,67,.46);box-shadow:0 24px 55px rgba(0,0,0,.27)}
+.card:hover:before{opacity:1}
+.card>*{position:relative}
+.btn{transition:transform .25s var(--bf-ease),background-color .25s,box-shadow .25s,border-color .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(233,188,67,.13)}
+.btn:focus-visible,a:focus-visible{outline:2px solid #f2ca69;outline-offset:4px}
+.portrait img{transition:transform .8s var(--bf-ease)}
+.portrait:hover img{transform:scale(1.035)}
+.gallery-link{background:linear-gradient(115deg,#1d1a14,#0b0b0b 75%);border-block:1px solid rgba(233,188,67,.2)}
+.trial{background:radial-gradient(ellipse at 50% 0%,rgba(233,188,67,.11),transparent 55%),#090909}
+.form{border:1px solid rgba(233,188,67,.23);box-shadow:0 30px 70px #0005}
+.field input,.field textarea{transition:border-color .2s,box-shadow .2s}
+.field input:focus,.field textarea:focus{border-color:#e9bc43;box-shadow:0 0 0 3px rgba(233,188,67,.11)}
+@media(max-width:850px){.card:hover{transform:none}.hero h1{letter-spacing:-.045em}.section h2{line-height:1.15}}
+@media(prefers-reduced-motion:reduce){.card,.btn,.portrait img{transition:none!important}.card:hover,.btn:hover,.portrait:hover img{transform:none}}
